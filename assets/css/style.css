@@ -9,3 +9,10 @@
 .avenger-photo{object-position:center 20%}
 .footer-bottom{font-size:.875rem}
 @media(max-width:760px){.utility .container{gap:12px}.utility .container>span{max-width:60%;padding-block:7px;letter-spacing:.04em}.language-nav{flex-shrink:0}}
+
+/* Keep the supplied landscape portrait intact and its face within the card crop. */
+.tanuel-photo{object-position:center 20%}
+.staff-details h2{font-size:clamp(1rem,2.1vw,1.9rem)}
+.academic-name{white-space:nowrap}
+.publication-link{font-size:.78rem;font-weight:400;color:var(--muted)}
+@media(max-width:760px){.staff-details h2{font-size:clamp(.9rem,4.1vw,1.9rem)}}

@@ -31,6 +31,7 @@
     document.documentElement.lang = language;
     document.querySelectorAll('main [lang], .skip-link [lang], #site-header span[lang], #site-footer [lang]').forEach(el => { el.hidden = el.lang !== language; });
     document.querySelectorAll('[data-it][data-en]').forEach(el => { el.textContent = el.dataset[language]; });
+    document.querySelectorAll('[data-alt-it][data-alt-en]').forEach(el => { el.alt = el.dataset[language === 'it' ? 'altIt' : 'altEn']; });
     document.querySelectorAll('a[href]').forEach(link => {
       const href = link.getAttribute('href');
       if (href.startsWith('#')) return;
@@ -79,7 +80,17 @@
   }
   const form = document.getElementById('application-form');
   if (form) {
-    /* No action, fetch, FileReader, storage or payment integration. */
+    /* Local development/display counter only: NOT a global count of applications.
+       Store only an aggregate integer, never applicant fields or file metadata.
+       Exposed for developers in the console; no counter UI or analytics. */
+    const counterKey = 'unibv.localApplicationAttempts';
+    let attemptCount = 0;
+    try {
+      const stored = Number(localStorage.getItem(counterKey));
+      if (Number.isSafeInteger(stored) && stored >= 0) attemptCount = stored;
+    } catch { /* Keep an in-memory counter when browser storage is unavailable. */ }
+    window.unibvDevelopment = Object.freeze({ getApplicationAttemptCount: () => attemptCount });
+    /* No action, fetch, FileReader, personal-data storage or payment integration. */
     form.reset();
     document.getElementById('application-fields').disabled = false;
     form.querySelectorAll('input[type="file"]').forEach(input => input.addEventListener('change', () => validatePDF(input)));
@@ -90,6 +101,9 @@
       form.reset();
       const dialog = document.getElementById('reveal');
       dialog.showModal();
+      if (attemptCount < Number.MAX_SAFE_INTEGER) attemptCount += 1;
+      try { localStorage.setItem(counterKey, String(attemptCount)); }
+      catch { /* Local confirmation still works when storage is unavailable. */ }
       document.getElementById('close-reveal').focus();
     });
     document.getElementById('close-reveal').addEventListener('click', () => document.getElementById('reveal').close());

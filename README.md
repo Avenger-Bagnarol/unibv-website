@@ -32,13 +32,13 @@ The original root-level logo is preserved. The site uses its copy at `assets/ima
 Add real replacement portraits at:
 
 - `assets/images/avenger_bagnarol.png`: Avenger Bagnarol (current portrait).
-- `assets/images/picture2.jpg`: Tanuel Mecchiolli.
+- `assets/images/tanuel_mecchiolli.png`: Tanuel Mecchiolli.
 
-Tanuel’s card shows styled initials until his photograph exists. Portrait files are not altered; CSS controls the crop.
+Both cards use the supplied portraits, with styled initials as a load-error fallback. Portrait files are not altered; CSS controls the crop.
 
 ## Application privacy
 
-Use test details and test PDFs. The application has no external endpoint. It validates required fields and PDF filename/type metadata locally without reading file contents. On valid submission it clears the form and opens the result panel. No payment is taken, documents are not uploaded, and applicant data is not written to storage. Form fields also clear when leaving or restoring the page. The PDF check is a usability check, not a document authenticity check.
+Use test details and test PDFs. The application has no external endpoint. It validates required fields and PDF filename/type metadata locally without reading file contents. On valid submission it clears the form and opens the result panel. No payment is taken, documents are not uploaded, and applicant data is not written to storage. Form fields also clear when leaving or restoring the page. The PDF check is a usability check, not a document authenticity check. Successful local confirmation increments only an aggregate integer under `unibv.localApplicationAttempts` in localStorage. This browser-specific development/display counter is not a global application count; inspect it with `unibvDevelopment.getApplicationAttemptCount()` in the console on the application page. If storage is unavailable, the counter stays in memory. No applicant fields or file metadata are stored.
 
 ## GitHub Pages
 
