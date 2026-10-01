@@ -104,7 +104,9 @@
       if (attemptCount < Number.MAX_SAFE_INTEGER) attemptCount += 1;
       try { localStorage.setItem(counterKey, String(attemptCount)); }
       catch { /* Local confirmation still works when storage is unavailable. */ }
-      document.getElementById('close-reveal').focus();
+      // Start at the heading so the longer message is readable on small screens.
+      document.getElementById('reveal-title').focus();
+      dialog.scrollTop = 0;
     });
     document.getElementById('close-reveal').addEventListener('click', () => document.getElementById('reveal').close());
     window.addEventListener('pagehide', () => form.reset());
