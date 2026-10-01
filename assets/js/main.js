@@ -12,9 +12,9 @@
     ['apply.html', 'Candidature', 'Apply']
   ].map(([href, it, en]) => `<a href="${href}" ${href === page ? 'aria-current="page"' : ''}>${t(it, en)}</a>`).join('');
   document.getElementById('site-header').innerHTML = `
-    <div class="utility"><div class="container"><span>VEZZANO (TN) · TRENTINO</span><nav class="language-nav" aria-label="Language / Lingua"><a href="?lang=it" data-language="it" lang="it">ITALIANO</a><span aria-hidden="true">|</span><a href="?lang=en" data-language="en" lang="en">ENGLISH</a></nav></div></div>
+    <div class="utility"><div class="container"><span>${t('Via Roma 61/D · Vezzano (TN) · Trentino, Italia', 'Via Roma 61/D · Vezzano (TN) · Trentino, Italy')}</span><nav class="language-nav" aria-label="Language / Lingua"><a href="?lang=it" data-language="it" lang="it">ITALIANO</a><span aria-hidden="true">|</span><a href="?lang=en" data-language="en" lang="en">ENGLISH</a></nav></div></div>
     <div class="container header-main"><a class="brand" href="index.html"><img src="assets/images/logo.png" width="1254" height="1254" alt="UNIBV"><span>${t('Università<br>La Borgata Vezzano', 'University of<br>La Borgata Vezzano')}<small>SCIENTIA · CULTURA · FUTURUM</small></span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">${t('Menu', 'Menu')} <span aria-hidden="true">☰</span></button><nav id="main-nav" aria-label="${language === 'it' ? 'Navigazione principale' : 'Main navigation'}">${links()}</nav></div>`;
-  document.getElementById('site-footer').innerHTML = `<div class="container footer-grid"><div><p class="footer-title">${t('Università La Borgata Vezzano', 'University of La Borgata Vezzano')}</p><p>${t('Vezzano (TN), Trentino, Italia', 'Vezzano (TN), Trentino, Italy')}</p><p class="footer-motto">Scientia · Cultura · Futurum</p></div><nav aria-label="Footer">${links()}</nav></div><div class="container footer-bottom"><span>© ${new Date().getFullYear()} UNIBV</span><p>${t('UNIBV è un progetto satirico e un’università immaginaria.', 'UNIBV is a satirical project and a fictional university.')}</p></div>`;
+  document.getElementById('site-footer').innerHTML = `<div class="container footer-grid"><div><p class="footer-title">${t('Università La Borgata Vezzano', 'University of La Borgata Vezzano')}</p><p>${t('Via Roma 61/D<br>Vezzano (TN)<br>Trentino, Italia', 'Via Roma 61/D<br>Vezzano (TN)<br>Trentino, Italy')}</p><p class="footer-motto">Scientia · Cultura · Futurum</p></div><nav aria-label="Footer">${links()}</nav></div><div class="container footer-bottom"><span>© ${new Date().getFullYear()} UNIBV</span><p>${t('UNIBV è un progetto satirico e un’università immaginaria.', 'UNIBV is a satirical project and a fictional university.')}</p></div>`;
   const titles = {
     'index.html': ['Università La Borgata Vezzano', 'University of La Borgata Vezzano'],
     'staff.html': ['Personale', 'Staff'],
@@ -22,10 +22,10 @@
     'apply.html': ['Candidatura al Dottorato', 'PhD Application']
   };
   const descriptions = {
-    'index.html': ['UNIBV: ricerca, formazione e cultura a Vezzano. Progetto satirico e università immaginaria.', 'UNIBV: research, education and culture in Vezzano. A satirical project and fictional university.'],
-    'staff.html': ['Profili accademici dimostrativi di UNIBV, università immaginaria a Vezzano.', 'Demonstration academic profiles at UNIBV, a fictional university in Vezzano.'],
-    'publications.html': ['Catalogo di pubblicazioni di esempio UNIBV. Tutti i riferimenti sono contenuti dimostrativi.', 'UNIBV sample publication catalogue. All references are demonstration content.'],
-    'apply.html': ['Interfaccia dimostrativa di candidatura UNIBV. Nessun pagamento, caricamento o invio di dati.', 'UNIBV demonstration application. No payments, uploads or transmission of data.']
+    'index.html': ['UNIBV: ricerca, formazione e cultura. Via Roma 61/D, Vezzano (TN), Trentino, Italia.', 'UNIBV: research, education and culture. Via Roma 61/D, Vezzano (TN), Trentino, Italy.'],
+    'staff.html': ['Personale accademico UNIBV: fisica, matematica e metodi numerici. Via Roma 61/D, Vezzano (TN), Trentino, Italia.', 'UNIBV academic staff: physics, mathematics and numerical methods. Via Roma 61/D, Vezzano (TN), Trentino, Italy.'],
+    'publications.html': ['Pubblicazioni UNIBV: contributi di ricerca in fisica e matematica.', 'UNIBV publications: research contributions in physics and mathematics.'],
+    'apply.html': ['Candidatura al Dottorato UNIBV. Verifica locale senza pagamenti o trasmissione di dati.', 'UNIBV PhD application. Local validation without payments or data transmission.']
   };
   function translate() {
     document.documentElement.lang = language;
@@ -35,7 +35,7 @@
       const href = link.getAttribute('href');
       if (href.startsWith('#')) return;
       const url = new URL(href, location.href);
-      if (url.origin !== location.origin) return;
+      if (url.origin !== location.origin || !/\.html$/.test(url.pathname)) return;
       url.searchParams.set('lang', link.dataset.language || language);
       link.setAttribute('href', `${url.pathname.split('/').pop() || 'index.html'}${url.search}${url.hash}`);
     });

@@ -1,8 +1,8 @@
 # unibv-website
 
-Website of the fictional university La Borgata Vezzano.
+Website of Università La Borgata Vezzano.
 
-A static, bilingual university parody built with HTML, CSS and vanilla JavaScript. No build step, external dependencies, tracking, payment service or backend.
+A static, bilingual university website built with HTML, CSS and vanilla JavaScript. No build step, external dependencies, tracking, payment service or backend.
 
 ## Preview
 
@@ -16,10 +16,10 @@ Open http://localhost:8000. If that port is occupied, stop the existing server o
 
 ## Pages and editing
 
-- `index.html`: home, university overview, demonstration news.
+- `index.html`: home, university overview and research perspectives.
 - `staff.html`: staff biographies and research interests.
-- `publications.html`: five fictional examples, each marked with an editing comment. Copy an article to add another publication and update both language blocks.
-- `apply.html`: local application demonstration and fictional-university reveal.
+- `publications.html`: the paper by Avenger Bagnarol and Tanuel Mecchiolli, dated 27 September 2026. Copy the publication article to add another paper, using its actual bibliographic information.
+- `apply.html`: local-only application form and result panel.
 - `assets/css/style.css`: shared styling; brand colours are variables in `:root`.
 - `assets/js/main.js`: reusable header/footer, language switching, mobile menu, photo fallback and local form validation.
 
@@ -31,14 +31,14 @@ The original root-level logo is preserved. The site uses its copy at `assets/ima
 
 Add real replacement portraits at:
 
-- `assets/images/picture1.jpg`: Avenger Bagnarol.
+- `assets/images/avenger_bagnarol.png`: Avenger Bagnarol (current portrait).
 - `assets/images/picture2.jpg`: Tanuel Mecchiolli.
 
-Until these files exist, the staff page shows styled initials and a photograph-forthcoming message. No placeholder binary files are included.
+Tanuel’s card shows styled initials until his photograph exists. Portrait files are not altered; CSS controls the crop.
 
 ## Application privacy
 
-Use fictional details and test PDFs. The application has no external endpoint. It validates required fields and PDF filename/type metadata locally without reading file contents. On valid submission it clears the form and opens the reveal. No payment is taken, documents are not uploaded, and applicant data is not written to storage. Form fields also clear when leaving or restoring the page. The PDF check is a demo usability check, not a document authenticity check.
+Use test details and test PDFs. The application has no external endpoint. It validates required fields and PDF filename/type metadata locally without reading file contents. On valid submission it clears the form and opens the result panel. No payment is taken, documents are not uploaded, and applicant data is not written to storage. Form fields also clear when leaving or restoring the page. The PDF check is a usability check, not a document authenticity check.
 
 ## GitHub Pages
 
@@ -46,4 +46,10 @@ Publish the repository root through GitHub Pages. All asset and navigation paths
 
 ## Verification
 
-Checked all four pages in both languages at desktop and mobile widths using Chromium: navigation and language persistence, overflow, photo fallbacks, keyboard menu, required fields, PDF selection validation, dialog dismissal, cleared form fields, and no network requests on demonstration submission.
+Checked all four pages in both languages at desktop and mobile widths using Chromium: navigation and language persistence, overflow, photo fallbacks, keyboard menu, required fields, PDF selection validation, dialog dismissal, cleared form fields, and no network requests on local submission.
+
+## Publication asset and address
+
+`assets/publications/BET_distribution_final.pdf` is the unchanged supplied PDF. Its title is *The Bifurcated Equiprobability Theory: A Comprehensive Re-examination of All Binary Outcomes*, by Avenger Bagnarol and Tanuel Mecchiolli, dated 27 September 2026. No journal or conference venue is specified in the document. Its original English title is used in both language views. PDF links retain their asset paths and are not rewritten by the language selector.
+
+The website address is Via Roma 61/D, Vezzano (TN), Trentino, Italia (Italy in English). The supplied PDF’s contents and affiliation line remain unchanged. The bottom disclosure remains readable in both languages.
