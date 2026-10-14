@@ -1,5 +1,37 @@
 /* Shared shell and authored translations. Only the language travels in the URL. */
 (() => {
+  // Supabase application counter configuration (public browser credentials only).
+  // Use the project origin (without /rest/v1). Never use a secret or service_role key here.
+  const SUPABASE_URL = 'https://xfunpajmlfsxqbnilnke.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_1jS6T50_YnhJ0mA44OcckQ_c6IGFmxI';
+
+  async function incrementApplication(country) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    try {
+      if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY || SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_PUBLISHABLE_KEY === 'YOUR_SUPABASE_PUBLISHABLE_KEY') {
+        throw new Error('Set SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY to enable the application counter.');
+      }
+      const projectURL = new URL(SUPABASE_URL);
+      if (projectURL.protocol !== 'https:' || projectURL.pathname !== '/' || projectURL.search || projectURL.hash || projectURL.username || projectURL.password) {
+        throw new Error('SUPABASE_URL must be the HTTPS project origin, without /rest/v1 or credentials.');
+      }
+      const response = await fetch(`${projectURL.origin}/rest/v1/rpc/increment_application`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY },
+        body: JSON.stringify({ p_country: country }),
+        signal: controller.signal
+      });
+      // The PostgreSQL function returns void, so no JSON response is expected.
+      if (!response.ok) throw new Error(`RPC failed (${response.status}): ${await response.text()}`);
+    } catch (error) {
+      // Log only a redacted message, never a request object or credentials.
+      const message = error.name === 'AbortError' ? 'Request timed out after 10 seconds.' : String(error.message || 'Request failed.');
+      console.error('Supabase application counter:', message.split(SUPABASE_PUBLISHABLE_KEY).join('[redacted]').split(SUPABASE_URL).join('[project URL]'));
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
   const params = new URLSearchParams(location.search);
   let language = params.get('lang') === 'en' ? 'en' : 'it';
   const page = location.pathname.split('/').pop() || 'index.html';
@@ -25,7 +57,7 @@
     'index.html': ['UNIBV: ricerca, formazione e cultura. Via Roma 61/D, Vezzano (TN), Trentino, Italia.', 'UNIBV: research, education and culture. Via Roma 61/D, Vezzano (TN), Trentino, Italy.'],
     'staff.html': ['Personale accademico UNIBV: fisica, matematica e metodi numerici. Via Roma 61/D, Vezzano (TN), Trentino, Italia.', 'UNIBV academic staff: physics, mathematics and numerical methods. Via Roma 61/D, Vezzano (TN), Trentino, Italy.'],
     'publications.html': ['Pubblicazioni UNIBV: contributi di ricerca in fisica e matematica.', 'UNIBV publications: research contributions in physics and mathematics.'],
-    'apply.html': ['Candidatura al Dottorato UNIBV. Verifica locale senza pagamenti o trasmissione di dati.', 'UNIBV PhD application. Local validation without payments or data transmission.']
+    'apply.html': ['Candidatura al Dottorato UNIBV. Verifica locale senza pagamenti; solo il paese viene inviato per il conteggio delle candidature.', 'UNIBV PhD application. Local validation without payments; only the country is sent to count applications.']
   };
   function translate() {
     document.documentElement.lang = language;
@@ -90,14 +122,28 @@
       if (Number.isSafeInteger(stored) && stored >= 0) attemptCount = stored;
     } catch { /* Keep an in-memory counter when browser storage is unavailable. */ }
     window.unibvDevelopment = Object.freeze({ getApplicationAttemptCount: () => attemptCount });
-    /* No action, fetch, FileReader, personal-data storage or payment integration. */
+    /* Only the country is sent to Supabase; documents and other fields stay local. */
+    const submitButton = form.querySelector('button[type="submit"]');
+    let submissionPending = false;
     form.reset();
     document.getElementById('application-fields').disabled = false;
     form.querySelectorAll('input[type="file"]').forEach(input => input.addEventListener('change', () => validatePDF(input)));
     form.addEventListener('submit', event => {
       event.preventDefault();
+      if (submissionPending || document.getElementById('reveal').open) return;
       form.querySelectorAll('input[type="file"]').forEach(validatePDF);
       if (!form.reportValidity()) return;
+      const country = form.elements.namedItem('country').value;
+      submissionPending = true;
+      submitButton.disabled = true;
+      // Do not delay the joke popup, retry automatically, or normalize the country.
+      void incrementApplication(country).finally(() => {
+        // Keep a brief guard even when the request completes immediately.
+        setTimeout(() => {
+          submissionPending = false;
+          submitButton.disabled = false;
+        }, 600);
+      });
       form.reset();
       const dialog = document.getElementById('reveal');
       dialog.showModal();
